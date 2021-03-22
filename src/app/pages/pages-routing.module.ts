@@ -99,7 +99,7 @@ const routes: Routes = [
       },
       {
         path: "",
-        redirectTo: "trade-logs",
+        redirectTo: "overview",
         pathMatch: "full",
       },
       {
