@@ -20,6 +20,7 @@ import { OrderEntriesFacade } from "../../store/order-entries.facade";
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
       [autoScale]="autoScale"
+      [gradient]="true"
     >
     </ngx-charts-area-chart>
   `,
@@ -37,21 +38,14 @@ export class D3AreaStackComponent implements OnInit, OnDestroy {
   colorScheme: any;
   themeSubscription: any;
 
-  public data$ = this.service.getPnLChartDataPoints().pipe(
-    map((datapoints) => [
-      {
-        name: "PnL",
-        series: datapoints,
-      },
-    ]),
-    tap(console.log)
-  );
+  public data$ = this.service.getPnLChartDataPoints();
+
   private destroy$ = new Subject<void>();
   constructor(
     private service: OrderEntriesFacade,
     private theme: NbThemeService
   ) {
-    this.view = [innerWidth / 1.3, 646];
+    this.view = [innerWidth / 1.35, 646];
   }
 
   public onResize(event) {
@@ -65,13 +59,7 @@ export class D3AreaStackComponent implements OnInit, OnDestroy {
       .subscribe((config) => {
         const colors: NbJSThemeVariable = config.variables;
         this.colorScheme = {
-          domain: [
-            colors.primaryLight,
-            colors.infoLight,
-            colors.successLight,
-            colors.warningLight,
-            colors.dangerLight,
-          ],
+          domain: ["#56EBAF", "#FF8DA4", "#68BBFF"],
         };
       });
   }

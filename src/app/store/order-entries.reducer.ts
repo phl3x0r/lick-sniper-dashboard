@@ -144,19 +144,57 @@ export const selectSymbolStats = createSelector(
     )
 );
 
+export const selectTotalTradeCount = (hours?: number) =>
+  createSelector(selectOrderEntriesSortedSince(hours), (entries) => {
+    const totalTradeCount = entries.reduce(
+      (acc, cur) => (acc += cur.tradeCount),
+      0
+    );
+    return totalTradeCount;
+  });
+
+const calculateDatapoints = (
+  acc: { name: string; value: number }[],
+  cur: MappedOrderEntry
+): ({ name: string; value: number } | { name: Date; value: number })[] => [
+  ...acc,
+  {
+    name: cur.timestamp,
+    value: cur.realizedProfit + acc[acc.length - 1]?.value || 0,
+  },
+];
+
 export const selectPnLChartDataPoints = (hours?: number) =>
-  createSelector(selectOrderEntriesSortedSince(hours), (entries) =>
-    entries.reverse().reduce(
-      (acc, cur) => [
-        ...acc,
-        {
-          name: cur.timestamp,
-          value: cur.realizedProfit + acc[acc.length - 1]?.value || 0,
-        },
-      ],
-      <Array<{ name: string; value: number }>>[]
-    )
-  );
+  createSelector(selectOrderEntriesSortedSince(hours), (entries) => {
+    const reversed = entries.reverse();
+    return [
+      {
+        name: "Long",
+        series: reversed
+          .filter((e) => e.side === "LONG")
+          .reduce(
+            calculateDatapoints,
+            <Array<{ name: string; value: number }>>[]
+          ),
+      },
+      {
+        name: "Short",
+        series: reversed
+          .filter((e) => e.side === "SHORT")
+          .reduce(
+            calculateDatapoints,
+            <Array<{ name: string; value: number }>>[]
+          ),
+      },
+      {
+        name: "Total",
+        series: reversed.reduce(
+          calculateDatapoints,
+          <Array<{ name: string; value: number }>>[]
+        ),
+      },
+    ];
+  });
 
 export const selectProfitBySymbol = (hours?: number) =>
   createSelector(selectOrderEntriesSortedSince(hours), (entries) => {
@@ -171,6 +209,19 @@ export const selectProfitBySymbol = (hours?: number) =>
       }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 10);
+  });
+
+export const selectLongShortProfit = (hours?: number) =>
+  createSelector(selectOrderEntriesSortedSince(hours), (entries) => {
+    const mapped = entries.reduce((acc, cur) => {
+      acc[cur.side] = (acc[cur.side] || 0) + cur.realizedProfit;
+      return acc;
+    }, {});
+    return Object.keys(mapped).map((key) => ({
+      color: "#FF0",
+      name: key,
+      value: mapped[key],
+    }));
   });
 
 export const selectLatestEntryTime = createSelector(

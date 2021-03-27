@@ -12,6 +12,8 @@ import { ThemeModule } from "../../@theme/theme.module";
 import { OverviewComponent } from "./overview.component";
 import { TopSymbolsComponent } from "./top-symbols/top-symbols.component";
 import { PnLChartComponent } from "./pnl-chart/pnl-chart.component";
+import { TradeStatsComponent } from "./trade-stats/trade-stats.component";
+import { LongShortComponent } from "./long-short/long-short.component";
 
 @NgModule({
   imports: [
@@ -20,9 +22,17 @@ import { PnLChartComponent } from "./pnl-chart/pnl-chart.component";
     NbIconModule,
     NbInputModule,
     ThemeModule,
+    NbCardModule,
+    NbTreeGridModule,
     NgxChartsModule,
     Ng2SmartTableModule,
   ],
-  declarations: [OverviewComponent, TopSymbolsComponent, PnLChartComponent],
+  declarations: [
+    OverviewComponent,
+    TopSymbolsComponent,
+    PnLChartComponent,
+    TradeStatsComponent,
+    LongShortComponent,
+  ],
 })
 export class OverviewModule {}
