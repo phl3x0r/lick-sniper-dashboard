@@ -45,11 +45,11 @@ export class D3AreaStackComponent implements OnInit, OnDestroy {
     private service: OrderEntriesFacade,
     private theme: NbThemeService
   ) {
-    this.view = [innerWidth / 1.35, 646];
+    this.view = [innerWidth / 2.3, 646];
   }
 
   public onResize(event) {
-    this.view = [event.target.innerWidth / 1.35, 646];
+    this.view = [event.target.innerWidth / 2.3, 646];
   }
 
   ngOnInit(): void {
