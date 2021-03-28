@@ -44,11 +44,11 @@ export class PnLChartComponent implements OnInit, OnDestroy {
     private service: OrderEntriesFacade,
     private theme: NbThemeService
   ) {
-    this.view = [innerWidth / 3, null];
+    this.view = [700, null];
   }
 
   public onResize(event) {
-    this.view = [event.target.innerWidth / 3, null];
+    this.view = [700, null];
   }
 
   ngOnInit(): void {
